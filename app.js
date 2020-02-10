@@ -6,7 +6,6 @@ function getPoems() {
          var poemSpace = document.getElementById("poem-space");
          poemSpace.innerHTML = "";
          for (var i in poems) {
-            console.log(poems[i]);
             var poemName = poems[i].replace(" ", "_");
             poemSpace.innerHTML += `<a id="${poemName}" href="">${poems[i]}</a><br>`;
          }
