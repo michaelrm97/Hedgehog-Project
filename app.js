@@ -14,13 +14,20 @@ function getPoems() {
          poemSpace.innerHTML += `<br><a id="credits" href="">Credits</a>`
          for (var i in poems) {
             var poemName = poems[i].replace(" ", "_");
-            document.getElementById(poemName).onclick = () => { displayPoem(poemName); return false; }
+            document.getElementById(poemName).onclick = displayPoemCallback(poemName);
          }
          document.getElementById("credits").onclick = () => { displayCredits(); return false; }
       }
    };
    xmlhttp.open("GET", "poems.txt", true);
    xmlhttp.send();
+}
+
+function displayPoemCallback(poemName) {
+   return () => {
+      displayPoem(poemName);
+      return false;
+   }
 }
 
 // Display single poem
