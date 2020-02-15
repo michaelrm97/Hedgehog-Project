@@ -1,4 +1,6 @@
+// Display list of poems
 function getPoems() {
+   window.history.replaceState({}, document.title, "/");
    var xmlhttp = new XMLHttpRequest();
    xmlhttp.onreadystatechange = () => {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -12,44 +14,57 @@ function getPoems() {
          poemSpace.innerHTML += `<br><a id="credits" href="">Credits</a>`
          for (var i in poems) {
             var poemName = poems[i].replace(" ", "_");
-            document.getElementById(poemName).onclick = displayPoem(poemName);
+            document.getElementById(poemName).onclick = () => { displayPoem(poemName); return false; }
          }
-         document.getElementById("credits").onclick = displayCredits();
+         document.getElementById("credits").onclick = () => { displayCredits(); return false; }
       }
    };
    xmlhttp.open("GET", "poems.txt", true);
    xmlhttp.send();
 }
 
+// Display single poem
 function displayPoem(poemName) {
-   return () => {
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.onreadystatechange = () => {
-         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var poemContent = xmlhttp.responseText.split("\n");
-            var poemSpace = document.getElementById("poem-space");
-            poemSpace.innerHTML = `<h2>${poemName.replace("_", " ")}</h2>`;
-            for (var i in poemContent) {
-               poemSpace.innerHTML += poemContent[i] + "<br>";
-            }
-            poemSpace.innerHTML += `<a id="back" href="">Back</a>`
-            document.getElementById("back").onclick = () => { getPoems(); return false; }
+   var xmlhttp = new XMLHttpRequest();
+   xmlhttp.onreadystatechange = () => {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+         var poemContent = xmlhttp.responseText.split("\n");
+         var poemSpace = document.getElementById("poem-space");
+         poemSpace.innerHTML = `<h2>${poemName.replace("_", " ")}</h2>`;
+         for (var i in poemContent) {
+            poemSpace.innerHTML += poemContent[i] + "<br>";
          }
-      };
-      xmlhttp.open("GET", poemName + ".txt", true);
-      xmlhttp.send();
-      return false;
-   }
+         poemSpace.innerHTML += `<a id="back" href="">Back</a>`
+         document.getElementById("back").onclick = () => { getPoems(); return false; }
+      } else if (xmlhttp.status == 404) { // If cannot find poem then display list of poems
+         getPoems();
+      }
+   };
+   xmlhttp.open("GET", poemName + ".txt", true);
+   xmlhttp.send();
 }
 
+// Display credits
 function displayCredits() {
-   return () => {
-      var poemSpace = document.getElementById("poem-space");
-      poemSpace.innerHTML = `<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>`;
-      poemSpace.innerHTML += `<a id="back" href="">Back</a>`
-      document.getElementById("back").onclick = () => { getPoems(); return false; }
-      return false;
-   }
+   var poemSpace = document.getElementById("poem-space");
+   poemSpace.innerHTML = `<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>`;
+   poemSpace.innerHTML += `<a id="back" href="">Back</a>`
+   document.getElementById("back").onclick = () => { getPoems(); return false; }
 }
 
-getPoems();
+// Get paramaters from url
+function getUrlVars() {
+   var vars = {};
+   window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(_,key,value) {
+       vars[key] = value;
+   });
+   return vars;
+}
+
+var poem = getUrlVars()["poem"];
+
+if (poem != undefined) {
+   displayPoem(poem);
+} else {
+   getPoems();
+}
