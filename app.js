@@ -8,12 +8,12 @@ function getPoems() {
          var poemSpace = document.getElementById("poem-space");
          poemSpace.innerHTML = "";
          for (var i in poems) {
-            var poemName = poems[i].replace(" ", "_");
+            var poemName = poems[i].replace(/ /g, "_");
             poemSpace.innerHTML += `<a id="${poemName}" href="">${poems[i]}</a><br>`;
          }
          poemSpace.innerHTML += `<br><a id="credits" href="">Credits</a>`
          for (var i in poems) {
-            var poemName = poems[i].replace(" ", "_");
+            var poemName = poems[i].replace(/ /g, "_");
             document.getElementById(poemName).onclick = displayPoemCallback(poemName);
          }
          document.getElementById("credits").onclick = () => { displayCredits(); return false; }
@@ -37,7 +37,7 @@ function displayPoem(poemName) {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
          var poemContent = xmlhttp.responseText.split("\n");
          var poemSpace = document.getElementById("poem-space");
-         poemSpace.innerHTML = `<h2>${poemName.replace("_", " ")}</h2>`;
+         poemSpace.innerHTML = `<h2>${poemName.replace(/_/g, " ")}</h2>`;
          for (var i in poemContent) {
             poemSpace.innerHTML += poemContent[i] + "<br>";
          }
