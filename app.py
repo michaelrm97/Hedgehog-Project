@@ -11,8 +11,12 @@ def index():
 
 @app.route('/<path>')
 def page(path):
-   with open(path, encoding="utf-8") as f:
-      return f.read()
+   if not path.endswith("png"):
+      with open(path, encoding="utf-8") as f:
+         return f.read()
+   else:
+      with open(path, "rb") as f:
+         return f.read()
 
 if __name__ == '__main__':
    app.run()

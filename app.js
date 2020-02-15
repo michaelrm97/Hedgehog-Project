@@ -9,10 +9,12 @@ function getPoems() {
             var poemName = poems[i].replace(" ", "_");
             poemSpace.innerHTML += `<a id="${poemName}" href="">${poems[i]}</a><br>`;
          }
+         poemSpace.innerHTML += `<br><a id="credits" href="">Credits</a>`
          for (var i in poems) {
             var poemName = poems[i].replace(" ", "_");
             document.getElementById(poemName).onclick = displayPoem(poemName);
          }
+         document.getElementById("credits").onclick = displayCredits();
       }
    };
    xmlhttp.open("GET", "poems.txt", true);
@@ -36,6 +38,16 @@ function displayPoem(poemName) {
       };
       xmlhttp.open("GET", poemName + ".txt", true);
       xmlhttp.send();
+      return false;
+   }
+}
+
+function displayCredits() {
+   return () => {
+      var poemSpace = document.getElementById("poem-space");
+      poemSpace.innerHTML = `<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>`;
+      poemSpace.innerHTML += `<a id="back" href="">Back</a>`
+      document.getElementById("back").onclick = () => { getPoems(); return false; }
       return false;
    }
 }
